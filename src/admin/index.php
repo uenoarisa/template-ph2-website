@@ -1,4 +1,21 @@
 <?php
+session_start();
+
+
+require_once('./login/classes/UserLogic.php');
+
+require_once('./login/functions.php');
+
+$result = UserLogic::checkLogin();
+
+if(!$result){
+  $_SESSION['login_err'] = 'ログインに失敗しました';
+  header('Location: ./login/public/login_form.php');
+  return;
+}
+?>
+
+<?php
 include('../dbconnect.php');
 $sql = 'SELECT id, content FROM questions';
 $sql_questions = 'SELECT * FROM questions';
@@ -25,6 +42,8 @@ $is_empty = count($questions) === 0;
 </head>
 <body>
   <main>
+    <!-- <p>ログインユーザ:<?php echo h($login_user['name'])?>さん
+    </p> -->
     <div class="admin-container">
       <h2>問題一覧</h2>
       <?php if (!$is_empty){ ?>
